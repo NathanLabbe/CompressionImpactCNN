@@ -21,6 +21,8 @@ int color_space = JCS_RGB; /* or JCS_GRAYSCALE for grayscale images */
 int SCALE = 1;
 int QUALITY = 1;
 
+int qualities[] = {1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 16, 18, 20, 25, 30, 40, 50};
+
 int read_jpeg_file( char *filename )
 {
 	struct jpeg_decompress_struct cinfo;
@@ -160,9 +162,9 @@ int main()
 				strcat(infilename, inName);
 
 				
-				for (int j = 1; j<=21; j=j+10)
+				for (int j = 1; j< sizeof(qualities)/sizeof(qualities[0]); j++)
 				{
-					QUALITY = j;
+					QUALITY = qualities[j];
 
 					
 					char qualityString[2];
