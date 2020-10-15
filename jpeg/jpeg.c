@@ -123,7 +123,7 @@ int write_jpeg_file( char *filename )
 
 int main()
 {
-  char *infilename = "/home/rob/CompressionImpactCNN/inputImg/pomme.jpg", *outfilename = "/home/rob/CompressionImpactCNN/outputImg/out.jpg";
+  char *infilename = "/home/rob/CompressionImpactCNN/jpeg/inputImg/pomme.jpg", *outfilename = "/home/rob/CompressionImpactCNN/jpeg/outputImg/out.jpg";
   
   if( read_jpeg_file( infilename ) > 0 ) 
     {
