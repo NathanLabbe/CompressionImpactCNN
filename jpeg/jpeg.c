@@ -14,8 +14,8 @@
 
 unsigned char *raw_image = "/home/rob/Téléchargements/pomme.jpg";
 
-int width = 500;
-int height = 500;
+int width = 0;
+int height = 0;
 int bytes_per_pixel = 3;   /* or 1 for GRACYSCALE images */
 int color_space = JCS_RGB; /* or JCS_GRAYSCALE for grayscale images */
 int SCALE = 1;
@@ -57,12 +57,10 @@ int read_jpeg_file( char *filename )
 
 	jpeg_start_decompress( &cinfo );
   
-	printf("components = %d\n", cinfo.num_components);
   
   width = cinfo.output_width;
   height = cinfo.output_height;
 
-  printf("height = %d\n cinfo = %d\n", height, cinfo.output_scanline);
   
 	raw_image = (unsigned char*)malloc( width*height*cinfo.num_components );
 
@@ -70,7 +68,6 @@ int read_jpeg_file( char *filename )
   
 	while( cinfo.output_scanline < cinfo.output_height)
 	{
-    printf("scanline = %d\n", cinfo.output_scanline);
 		jpeg_read_scanlines( &cinfo, row_pointer, 1 );
 		for( i=0; i<cinfo.output_width*cinfo.num_components;i++) 
 			raw_image[location++] = row_pointer[0][i];
@@ -155,14 +152,14 @@ int main()
 				char *imgBase = entry->d_name;
 				char imgName[strlen(imgBase)-4];
 				strncpy(imgName, imgBase, strlen(imgBase)-4);
-				char inName[50];
+				char inName[255];
 				strcpy(inName, imgBase);
 
 				char infilename[255] = "/home/rob/CompressionImpactCNN/jpeg/inputImg/";
 				strcat(infilename, inName);
 
 				
-				for (int j = 1; j< sizeof(qualities)/sizeof(qualities[0]); j++)
+				for (int j = 0; j< sizeof(qualities)/sizeof(qualities[0]); j++)
 				{
 					QUALITY = qualities[j];
 
@@ -170,7 +167,7 @@ int main()
 					char qualityString[2];
 					sprintf(qualityString, "%d", QUALITY);
 					
-					char outName[50];
+					char outName[255];
 					strcpy(outName, imgName);
 					strcat(outName, scaleString);
 					strcat(outName, "_");
@@ -180,8 +177,6 @@ int main()
 
 					strcat(outfilename, outName);
 					strcat(outfilename, ".jpeg");
-					printf("in = %s\n", infilename);
-					printf("out = %s\n", outfilename);
 					
   					if( read_jpeg_file( infilename ) > 0 ) 
     				{
@@ -189,6 +184,8 @@ int main()
     				} else {
    						return -1;
   					}
+
+					
 				}
 			}
 		}
