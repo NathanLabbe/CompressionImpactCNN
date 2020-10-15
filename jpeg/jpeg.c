@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <jpeglib.h>
 #include <stdlib.h>
+#include <dirent.h>
+#include <string.h>
 
 unsigned char *raw_image = "/home/rob/Téléchargements/pomme.jpg";
 
@@ -16,6 +18,8 @@ int width = 500;
 int height = 500;
 int bytes_per_pixel = 3;   /* or 1 for GRACYSCALE images */
 int color_space = JCS_RGB; /* or JCS_GRAYSCALE for grayscale images */
+int SCALE = 1;
+int QUALITY = 1;
 
 int read_jpeg_file( char *filename )
 {
@@ -45,7 +49,7 @@ int read_jpeg_file( char *filename )
 	jpeg_read_header( &cinfo, TRUE );
 
   cinfo.scale_num = 1;
-  cinfo.scale_denom = 2;
+  cinfo.scale_denom = SCALE;
 
   
 
@@ -70,10 +74,10 @@ int read_jpeg_file( char *filename )
 			raw_image[location++] = row_pointer[0][i];
 	}
 
-	//jpeg_finish_decompress( &cinfo );
-	//jpeg_destroy_decompress( &cinfo );
-	//free( row_pointer[0] );
-	//fclose( infile );
+	jpeg_finish_decompress( &cinfo );
+	jpeg_destroy_decompress( &cinfo );
+	free( row_pointer[0] );
+	fclose( infile );
 
 	return 1;
 }
@@ -105,7 +109,7 @@ int write_jpeg_file( char *filename )
   
 
 	jpeg_set_defaults( &cinfo );
-  	jpeg_set_quality (&cinfo, 8, TRUE);
+  	jpeg_set_quality (&cinfo, QUALITY, TRUE);
   	jpeg_start_compress( &cinfo, TRUE );
 
 	while( cinfo.next_scanline < cinfo.image_height )
@@ -123,14 +127,72 @@ int write_jpeg_file( char *filename )
 
 int main()
 {
-  char *infilename = "/home/rob/CompressionImpactCNN/jpeg/inputImg/pomme.jpg", *outfilename = "/home/rob/CompressionImpactCNN/jpeg/outputImg/out.jpg";
-  
-  if( read_jpeg_file( infilename ) > 0 ) 
+
+ DIR *folder;
+    struct dirent *entry;
+    int files = 0;
+
+    folder = opendir("./inputImg/");
+    if(folder == NULL)
     {
-      if( write_jpeg_file( outfilename ) < 0 ) return -1;
-    } else {
-    return -1;
-  }
-  
-  return 0;
+        perror("Unable to read directory");
+        return(1);
+    }
+
+    while( (entry=readdir(folder))  )
+    {
+		if (strncmp((entry->d_name), ".", 1) != 0)
+		{
+			for(int i=1; i<=8; i=i*2)
+			{
+				SCALE = i;
+
+				char scaleString[2];
+				sprintf(scaleString, "%d", SCALE);
+
+				char *imgBase = entry->d_name;
+				char imgName[strlen(imgBase)-4];
+				strncpy(imgName, imgBase, strlen(imgBase)-4);
+				char inName[50];
+				strcpy(inName, imgBase);
+
+				char infilename[255] = "/home/rob/CompressionImpactCNN/jpeg/inputImg/";
+				strcat(infilename, inName);
+
+				
+				for (int j = 1; j<=21; j=j+10)
+				{
+					QUALITY = j;
+
+					
+					char qualityString[2];
+					sprintf(qualityString, "%d", QUALITY);
+					
+					char outName[50];
+					strcpy(outName, imgName);
+					strcat(outName, scaleString);
+					strcat(outName, "_");
+					strcat(outName, qualityString);
+
+					char outfilename[255] = "/home/rob/CompressionImpactCNN/jpeg/outputImg/";
+
+					strcat(outfilename, outName);
+					strcat(outfilename, ".jpeg");
+					printf("in = %s\n", infilename);
+					printf("out = %s\n", outfilename);
+					
+  					if( read_jpeg_file( infilename ) > 0 ) 
+    				{
+      					if( write_jpeg_file( outfilename ) < 0 ) return -1;
+    				} else {
+   						return -1;
+  					}
+				}
+			}
+		}
+    }
+
+    closedir(folder);
+
+    return(0);
 }
