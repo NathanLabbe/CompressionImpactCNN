@@ -131,7 +131,7 @@ int main()
     struct dirent *entry;
     int files = 0;
 
-    folder = opendir("./inputImg/");
+    folder = opendir("../inputImg/");
     if(folder == NULL)
     {
         perror("Unable to read directory");
@@ -150,14 +150,18 @@ int main()
 				sprintf(scaleString, "%d", SCALE);
 
 				char *imgBase = entry->d_name;
-				char imgName[strlen(imgBase)-4];
-				strncpy(imgName, imgBase, strlen(imgBase)-4);
-				char inName[255];
+				char *imgName = (char*)calloc(strlen(imgBase), sizeof(char));
+				//char imgName[strlen(imgBase)-4];
+				strncpy(imgName, imgBase, strlen(imgBase)-4*sizeof(char));
+				
+				char* inName = (char*)calloc(255, sizeof(char));
+				//char inName[255];
 				strcpy(inName, imgBase);
-
-				char infilename[255] = "/home/rob/CompressionImpactCNN/jpeg/inputImg/";
+				
+				char* infilename = (char*)calloc(255, sizeof(char));
+				strcat(infilename, "../inputImg/");
 				strcat(infilename, inName);
-
+				
 				
 				for (int j = 0; j< sizeof(qualities)/sizeof(qualities[0]); j++)
 				{
@@ -167,16 +171,20 @@ int main()
 					char qualityString[2];
 					sprintf(qualityString, "%d", QUALITY);
 					
-					char outName[255];
+					char* outName = (char*)calloc(255, sizeof(char));
+					//char outName[255];
 					strcpy(outName, imgName);
 					strcat(outName, scaleString);
 					strcat(outName, "_");
 					strcat(outName, qualityString);
+					
 
-					char outfilename[255] = "/home/rob/CompressionImpactCNN/jpeg/outputImg/";
-
+					char* outfilename = (char*)calloc(255, sizeof(char));
+					//char outfilename[255] = "./outputImg/";
+					strcat(outfilename, "./outputImg/");
 					strcat(outfilename, outName);
 					strcat(outfilename, ".jpeg");
+					
 					
   					if( read_jpeg_file( infilename ) > 0 ) 
     				{
@@ -185,8 +193,12 @@ int main()
    						return -1;
   					}
 
-					
+					free(outfilename);
+					free(outName);
+
 				}
+				free(inName);
+				free(infilename);
 			}
 		}
     }
