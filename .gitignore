@@ -4,5 +4,5 @@
 *.JPEG
 *.png
 *.PNG
-*bpg
-*BPG
+*.bpg
+*.BPG
