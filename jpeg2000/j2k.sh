@@ -1,7 +1,7 @@
 #!/bin/bash
 #pngquant --quality=1 ILSVRC2012_val_00000023.JPEG
 
-for file in ../png/inputImg/*; 
+for file in ../png/originalImg/*; 
 do 
   file2=$(basename -- "$file")
   file3=${file2::-4}
