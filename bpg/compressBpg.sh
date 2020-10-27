@@ -10,6 +10,6 @@ do
     f3=${f2::-5}
     for p in $PARAMETERS
     do
-        bpgenc $f -o "$OUTPUT$f3$p.bpg" -q $p
+        bpgenc $f -o "$OUTPUT$f3$p.bpg" -q $p -m=1
     done
 done
