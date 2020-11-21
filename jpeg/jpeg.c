@@ -104,7 +104,7 @@ int write_jpeg_file( char *filename )
 	cinfo.image_width = width;	
 	cinfo.image_height = height;
 	cinfo.input_components = bytes_per_pixel;
-	cinfo.in_color_space = color_space;
+	//cinfo.in_color_space = color_space;
 
 	jpeg_set_defaults( &cinfo );
   	jpeg_set_quality(&cinfo, QUALITY, TRUE);
