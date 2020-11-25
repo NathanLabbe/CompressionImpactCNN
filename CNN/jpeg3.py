@@ -7,18 +7,15 @@ import PIL
 import timeit
 
 
-alexnet_root = "/home/rob/caffe/models/bvlc_alexnet/"
-caffe_root = "/home/rob/caffe/"
-
-img_pre = "ILSVRC2012_val_"
-img_post = ".JPEG"
+alexnet_root = "../../caffe/models/bvlc_alexnet/"
+caffe_root = "../../home/rob/caffe/"
 
 directory = "../jpeg/outputImg/"
 original_img = pd.read_csv('../result.csv', sep=',')
 jpeg_img = pd.DataFrame(columns =  ['File_Name', 'rank', 'Rank_Diff'])
 
 
-ext = ".JPEG"
+original_ext = ".JPEG"
 
 
 # Set the right path to your model definition file, pretrained model weights,
@@ -30,7 +27,7 @@ PRETRAINED = alexnet_root + 'bvlc_alexnet.caffemodel'
 
 caffe.set_mode_cpu()
 net = caffe.Classifier(MODEL_FILE, PRETRAINED,
-                       mean=np.load('/home/rob/caffe/python/caffe/imagenet/ilsvrc_2012_mean.npy').mean(1).mean(1),
+                       mean=np.load('../../caffe/python/caffe/imagenet/ilsvrc_2012_mean.npy').mean(1).mean(1),
                        channel_swap=(2,1,0),
                        raw_scale=255,)
                        
@@ -38,12 +35,13 @@ start = timeit.default_timer()
 
 c = 0
 for entry in os.scandir(directory):
-    if c >= 54:
-        break
+    if c < 2640:
+        c += 1
+        continue
     if entry.is_file():
         IMAGE_FILE = entry.path
 
-    image_name = entry.name[0 : 23] + ext
+    image_name = entry.name[0 : 23] + original_ext
     print(image_name)
     
     input_image = caffe.io.load_image(IMAGE_FILE)
@@ -66,6 +64,6 @@ for entry in os.scandir(directory):
     jpeg_img.loc[c] =  [entry.name] + [label_rank] + [rank_diff]
     c+=1
 
-jpeg_img.to_csv("../jpeg.csv")
+jpeg_img.to_csv("../jpeg3.csv")
 stop = timeit.default_timer()
 print('Time: ', stop - start) 
