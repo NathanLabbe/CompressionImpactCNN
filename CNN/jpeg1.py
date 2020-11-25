@@ -12,7 +12,7 @@ caffe_root = "../../home/rob/caffe/"
 
 directory = "../jpeg/outputImg/"
 original_img = pd.read_csv('../result.csv', sep=',')
-jpeg_img = pd.DataFrame(columns =  ['File_Name', 'rank', 'Rank_Diff'])
+jpeg_img = pd.DataFrame(columns =  ['File_Name', 'rank', 'Rank_Diff', 'Time'])
 
 
 original_ext = ".JPEG"
@@ -31,17 +31,23 @@ net = caffe.Classifier(MODEL_FILE, PRETRAINED,
                        channel_swap=(2,1,0),
                        raw_scale=255,)
                        
-start = timeit.default_timer()
+
 
 c = 0
 for entry in os.scandir(directory):
     if entry.is_file():
         IMAGE_FILE = entry.path
+    if c == 10:
+        break
 
     image_name = entry.name[0 : 23] + original_ext
     
+    start = timeit.default_timer()
     input_image = caffe.io.load_image(IMAGE_FILE)
     prediction = net.predict([input_image])  # predict takes any number of images, and formats them for the Caffe net automatically
+    stop = timeit.default_timer()
+    
+    time = stop - start
 
     top_inds = prediction[0].argsort()[::-1][:len(prediction[0])]
     #print(top_inds[0])
@@ -54,11 +60,10 @@ for entry in os.scandir(directory):
     original_rank = original_img["Truth_Label_Rank"][index[0]]
     rank_diff = original_rank - label_rank
 
-    jpeg_img.loc[c] =  [entry.name] + [label_rank] + [rank_diff]
+    
+    jpeg_img.loc[c] =  [entry.name] + [label_rank] + [rank_diff] + [time]
 
     print(c)
     c+=1
 
 jpeg_img.to_csv("../jpegYcbr.csv")
-stop = timeit.default_timer()
-print('Time: ', stop - start) 
