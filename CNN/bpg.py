@@ -41,8 +41,7 @@ for entry in os.scandir(directory):
     if entry.is_file():
         IMAGE_FILE = entry.path
 
-    image_name = entry.name[0 : 23] + ext
-    print(image_name)
+    image_name = entry.name[0 : 23] + original_ext
     
     input_image = caffe.io.load_image(IMAGE_FILE)
     prediction = net.predict([input_image])  # predict takes any number of images, and formats them for the Caffe net automatically
@@ -58,10 +57,10 @@ for entry in os.scandir(directory):
     original_rank = original_img["Truth_Label_Rank"][index[0]]
     rank_diff = original_rank - label_rank
 
-    print("label rank: ", label_rank)
-    print("rank diff:", rank_diff)
+
 
     jpeg_img.loc[c] =  [entry.name] + [label_rank] + [rank_diff]
+    print(c)
     c+=1
 
 jpeg_img.to_csv("../bpg.csv")
