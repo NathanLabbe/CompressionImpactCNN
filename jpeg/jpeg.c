@@ -17,7 +17,7 @@ unsigned char *raw_image = "";
 int width = 0;
 int height = 0;
 int bytes_per_pixel = 3;   /* or 1 for GRACYSCALE images */
-int color_space = JCS_YCbCr; /* or JCS_GRAYSCALE for grayscale images */
+int color_space = JCS_RGB; /* or JCS_GRAYSCALE for grayscale images */
 int SCALE = 1;
 int QUALITY = 1;
 
@@ -104,7 +104,7 @@ int write_jpeg_file( char *filename )
 	cinfo.image_width = width;	
 	cinfo.image_height = height;
 	cinfo.input_components = bytes_per_pixel;
-	//cinfo.in_color_space = color_space;
+	cinfo.in_color_space = color_space;
 
 	jpeg_set_defaults( &cinfo );
   	jpeg_set_quality(&cinfo, QUALITY, TRUE);
