@@ -9,6 +9,8 @@ from skimage.metrics import structural_similarity as ssim
 from skimage.measure import compare_psnr as psnr
 from skimage import data, img_as_float
 from skimage.io import imread
+from SSIM_PIL import compare_ssim
+from PIL import Image
 
 
 
@@ -52,6 +54,7 @@ for entry in os.scandir(directory):
     imgori = imread(directoryOriginal + image_nameForSize, as_gray=True)
 
     img = imread(IMAGE_FILE, as_gray=True)
+    
     SSIM = ssim(imgori, img)
     PSNR = psnr(imgori, img)
     
