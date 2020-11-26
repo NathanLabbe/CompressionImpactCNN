@@ -5,14 +5,21 @@ import caffe
 import os
 import PIL
 import timeit
+from skimage.metrics import structural_similarity as ssim
+from skimage.measure import compare_psnr as psnr
+from skimage import data, img_as_float
+from skimage.io import imread
+
+
 
 
 alexnet_root = "../../caffe/models/bvlc_alexnet/"
 caffe_root = "../../home/rob/caffe/"
 
 directory = "../jpeg/outputImg/"
+directoryOriginal = "../inputAllSizes/"
 original_img = pd.read_csv('../result.csv', sep=',')
-jpeg_img = pd.DataFrame(columns =  ['File_Name', 'rank', 'Rank_Diff', 'Time'])
+jpeg_img = pd.DataFrame(columns =  ['File_Name', 'rank', 'Rank_Diff', 'Time', 'SSIM', 'PSNR'])
 
 
 original_ext = ".JPEG"
@@ -30,15 +37,26 @@ net = caffe.Classifier(MODEL_FILE, PRETRAINED,
                        mean=np.load('../../caffe/python/caffe/imagenet/ilsvrc_2012_mean.npy').mean(1).mean(1),
                        channel_swap=(2,1,0),
                        raw_scale=255,)
-                       
+
+
 
 
 c = 0
 for entry in os.scandir(directory):
+    if c >= 1320:
+        break
     if entry.is_file():
         IMAGE_FILE = entry.path
-    if c == 10:
-        break
+    image_nameForSize = entry.name[0 : 26] + ".jpeg"
+
+    imgori = imread(directoryOriginal + image_nameForSize, as_gray=True)
+
+    img = imread(IMAGE_FILE, as_gray=True)
+    SSIM = ssim(imgori, img)
+    PSNR = psnr(imgori, img)
+    
+
+
 
     image_name = entry.name[0 : 23] + original_ext
     
@@ -60,10 +78,10 @@ for entry in os.scandir(directory):
     original_rank = original_img["Truth_Label_Rank"][index[0]]
     rank_diff = original_rank - label_rank
 
-    
-    jpeg_img.loc[c] =  [entry.name] + [label_rank] + [rank_diff] + [time]
 
+
+    jpeg_img.loc[c] =  [entry.name] + [label_rank] + [rank_diff] + [time] + [SSIM] + [PSNR]
     print(c)
     c+=1
 
-jpeg_img.to_csv("../jpegYcbr.csv")
+jpeg_img.to_csv("../jpeg1.csv")

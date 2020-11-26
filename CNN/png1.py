@@ -16,7 +16,7 @@ from skimage.io import imread
 alexnet_root = "../../caffe/models/bvlc_alexnet/"
 caffe_root = "../../home/rob/caffe/"
 
-directory = "../jpeg/outputImg/"
+directory = "../png/outputImg/"
 directoryOriginal = "../inputAllSizes/"
 original_img = pd.read_csv('../result.csv', sep=',')
 jpeg_img = pd.DataFrame(columns =  ['File_Name', 'rank', 'Rank_Diff', 'Time', 'SSIM', 'PSNR'])
@@ -43,10 +43,7 @@ net = caffe.Classifier(MODEL_FILE, PRETRAINED,
 
 c = 0
 for entry in os.scandir(directory):
-    if c < 1320:
-        c += 1
-        continue
-    if c >= 2640:
+    if c >= 1320:
         break
     if entry.is_file():
         IMAGE_FILE = entry.path
@@ -87,4 +84,4 @@ for entry in os.scandir(directory):
     print(c)
     c+=1
 
-jpeg_img.to_csv("../jpeg2.csv")
+jpeg_img.to_csv("../png1.csv")

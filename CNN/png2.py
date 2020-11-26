@@ -16,7 +16,7 @@ from skimage.io import imread
 alexnet_root = "../../caffe/models/bvlc_alexnet/"
 caffe_root = "../../home/rob/caffe/"
 
-directory = "../jpeg/outputImg/"
+directory = "../png/outputImg/"
 directoryOriginal = "../inputAllSizes/"
 original_img = pd.read_csv('../result.csv', sep=',')
 jpeg_img = pd.DataFrame(columns =  ['File_Name', 'rank', 'Rank_Diff', 'Time', 'SSIM', 'PSNR'])
@@ -87,4 +87,4 @@ for entry in os.scandir(directory):
     print(c)
     c+=1
 
-jpeg_img.to_csv("../jpeg2.csv")
+jpeg_img.to_csv("../png2.csv")
