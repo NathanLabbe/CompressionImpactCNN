@@ -87,4 +87,4 @@ for entry in os.scandir(directory):
     print(c)
     c+=1
 
-jpeg_img.to_csv("../jpeg2.csv")
+jpeg_img.to_csv("../jpegRGB2.csv")
