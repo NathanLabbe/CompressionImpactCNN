@@ -95,7 +95,7 @@ library(RColorBrewer)
 coul <- brewer.pal(5, "Set2") 
 barplot(height=meanComp$x, names=meanComp$Group.1, col=coul)
 
-coul <- brewer.pal(5, "Set1") 
+coul <- brewer.pal(5, "Set2") 
 barplot(height=meanSize$x, names=meanSize$Group.1, col=coul)
 
 ggplot(meanComp, aes(x=Group.1, y=x)) + 
@@ -144,6 +144,20 @@ for (name in sizes$name){
 png_2_40 <- mean(png$compression)
 medpng_2_40 <- median(png$compression)
 sdpng_2_40 <- sd(png$compression)
+
+#2_10
+png <- data.frame("name" = character(), "compression" = double())
+for (name in sizes$name){
+  if(endsWith(name, "2_10.png")){
+    cr <- sizes$compressionRate[sizes$name == name]
+    tmp <- data.frame("name" = name, "compression" = cr)
+    png <- rbind(png, tmp)
+  }
+}
+png_2_10 <- mean(png$compression)
+medpng_2_10 <- median(png$compression)
+sdpng_2_10 <- sd(png$compression)
+
 #4_50
 png <- data.frame("name" = character(), "compression" = double())
 for (name in sizes$name){
@@ -156,6 +170,20 @@ for (name in sizes$name){
 png_4_50 <- mean(png$compression)
 medpng_4_50 <- median(png$compression)
 sdpng_4_50 <- sd(png$compression)
+
+#4_20
+png <- data.frame("name" = character(), "compression" = double())
+for (name in sizes$name){
+  if(endsWith(name, "4_20.png")){
+    cr <- sizes$compressionRate[sizes$name == name]
+    tmp <- data.frame("name" = name, "compression" = cr)
+    png <- rbind(png, tmp)
+  }
+}
+png_4_20 <- mean(png$compression)
+medpng_4_20 <- median(png$compression)
+sdpng_4_20 <- sd(png$compression)
+
 #8_50
 png <- data.frame("name" = character(), "compression" = double())
 for (name in sizes$name){
@@ -184,6 +212,7 @@ for (name in sizes$name){
 jpeg_1_30 <- mean(jpeg$compression)
 medjpeg_1_30 <- median(jpeg$compression)
 sd_1_30 <- sd(jpeg$compression)
+
 #2_40
 jpeg <- data.frame("name" = character(), "compression" = double())
 for (name in sizes$name){
@@ -196,6 +225,20 @@ for (name in sizes$name){
 jpeg_2_40 <- mean(jpeg$compression)
 medjpeg_2_40 <- median(jpeg$compression)
 sd_2_40 <- sd(jpeg$compression)
+
+#2_10
+jpeg <- data.frame("name" = character(), "compression" = double())
+for (name in sizes$name){
+  if(endsWith(name, "2_10.jpeg")){
+    cr <- sizes$compressionRate[sizes$name == name]
+    tmp <- data.frame("name" = name, "compression" = cr)
+    jpeg <- rbind(jpeg, tmp)
+  }
+}
+jpeg_2_10 <- mean(jpeg$compression)
+medjpeg_2_10 <- median(jpeg$compression)
+sd_2_10 <- sd(jpeg$compression)
+
 #4_50
 jpeg <- data.frame("name" = character(), "compression" = double())
 for (name in sizes$name){
@@ -208,6 +251,20 @@ for (name in sizes$name){
 jpeg_4_50 <- mean(jpeg$compression)
 medjpeg_4_50 <- median(jpeg$compression)
 sd_4_50 <- sd(jpeg$compression)
+
+#4_20
+jpeg <- data.frame("name" = character(), "compression" = double())
+for (name in sizes$name){
+  if(endsWith(name, "4_20.jpeg")){
+    cr <- sizes$compressionRate[sizes$name == name]
+    tmp <- data.frame("name" = name, "compression" = cr)
+    jpeg <- rbind(jpeg, tmp)
+  }
+}
+jpeg_4_20 <- mean(jpeg$compression)
+medjpeg_4_20 <- median(jpeg$compression)
+sd_4_20 <- sd(jpeg$compression)
+
 #8_50
 jpeg <- data.frame("name" = character(), "compression" = double())
 for (name in sizes$name){
